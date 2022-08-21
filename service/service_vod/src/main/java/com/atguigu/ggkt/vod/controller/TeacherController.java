@@ -53,8 +53,8 @@ public class TeacherController {
     @ApiOperation("分页查询讲师")
     @PostMapping("/{page}/{pageSize}")
     public Result findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
-                               @ApiParam(name = "pageSize", value = "每页大小size") @PathVariable Long pageSize,
-                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO") TeacherQueryVo teacherQueryVo){
+                               @ApiParam(name = "pageSize", value = "每页大小size", required = false) @PathVariable Long pageSize,
+                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) TeacherQueryVo teacherQueryVo){
         String name = teacherQueryVo.getName();
         Integer level = teacherQueryVo.getLevel();
         String joinDateBegin = teacherQueryVo.getJoinDateBegin();
