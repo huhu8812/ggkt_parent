@@ -44,7 +44,7 @@ public class TeacherController {
     public Result removeById(@ApiParam(name = "id", value = "ID", required = true)
                                   @PathVariable String id){
         boolean isSuccess = teacherService.removeById(id);
-        if (isSuccess == true){
+        if (isSuccess){
             return Result.ok(null).message("删除成功");
         } else {
             return Result.fail(null).message("删除失败");
@@ -53,7 +53,7 @@ public class TeacherController {
 
     @ApiOperation("分页查询讲师")
     @PostMapping("/{page}/{pageSize}")
-    public Result findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
+    public Result<Page<Teacher>> findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
                                @ApiParam(name = "pageSize", value = "每页大小size", required = false) @PathVariable Long pageSize,
                            @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) @RequestBody(required = false) TeacherQueryVo teacherQueryVo) {
 
@@ -75,9 +75,47 @@ public class TeacherController {
                     .ge(joinDateBegin != null, Teacher::getJoinDate, joinDateBegin)
                     .le(joinDateEnd != null, Teacher::getJoinDate, joinDateEnd);
 
-            IPage<Teacher> teacherPage = teacherService.page(pageInfo, lambdaQueryWrapper);
+            Page<Teacher> teacherPage = teacherService.page(pageInfo, lambdaQueryWrapper);
 
             return Result.ok(teacherPage).message("分页查询讲师成功");
+        }
+    }
+
+    @ApiOperation("新增一个讲师")
+    @PostMapping("/add")
+    public Result addTeacher(@RequestBody Teacher teacher){
+        boolean isSuccess = teacherService.save(teacher);
+        if (isSuccess) {
+            return Result.ok(null);
+        } else {
+            return Result.fail(null);
+        }
+    }
+
+    /**
+     * 编辑讲师前，先查询
+     * @param id
+     * @return
+     */
+    @ApiOperation("根据ID查询讲师")
+    @GetMapping("/{id}")
+    public Result getTeacherById(@PathVariable Long id){
+        Teacher teacher = teacherService.getById(id);
+        if (teacher != null){
+            return Result.ok(teacher);
+        } else {
+            return Result.fail(null).message("没有查询到讲师信息");
+        }
+    }
+
+    @ApiOperation("编辑讲师信息")
+    @PostMapping("/edit")
+    public Result editTeacher(@RequestBody Teacher teacher){
+        boolean isSuccess = teacherService.updateById(teacher);
+        if (isSuccess){
+            return Result.ok(null);
+        } else {
+            return Result.fail(null);
         }
     }
 }
