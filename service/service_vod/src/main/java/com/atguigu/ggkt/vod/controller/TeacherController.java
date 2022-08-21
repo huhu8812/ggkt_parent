@@ -1,6 +1,7 @@
 package com.atguigu.ggkt.vod.controller;
 
 
+import com.atguigu.ggkt.exception.GgktException;
 import com.atguigu.ggkt.model.vod.Teacher;
 import com.atguigu.ggkt.result.Result;
 import com.atguigu.ggkt.vo.vod.TeacherQueryVo;
@@ -122,6 +123,11 @@ public class TeacherController {
     @ApiOperation("根据ID列表批量删除讲师")
     @DeleteMapping("/batchremove")
     public Result removeBatch(@RequestBody List<Long> idList){
+//        try {
+//            int a = 10/0;
+//        } catch (Exception e){
+//            throw new GgktException(1000, "抛出自定义异常");
+//        }
         boolean isSuccess = teacherService.removeByIds(idList);
         if (isSuccess){
             return Result.ok(null);
