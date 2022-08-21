@@ -3,7 +3,10 @@ package com.atguigu.ggkt.vod.controller;
 
 import com.atguigu.ggkt.model.vod.Teacher;
 import com.atguigu.ggkt.result.Result;
+import com.atguigu.ggkt.vo.vod.TeacherQueryVo;
 import com.atguigu.ggkt.vod.service.TeacherService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,6 +48,29 @@ public class TeacherController {
         } else {
             return Result.fail(null).message("删除失败");
         }
+    }
+
+    @ApiOperation("分页查询讲师")
+    @PostMapping("/{page}/{pageSize}")
+    public Result findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
+                               @ApiParam(name = "pageSize", value = "每页大小size") @PathVariable Long pageSize,
+                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO") TeacherQueryVo teacherQueryVo){
+        String name = teacherQueryVo.getName();
+        Integer level = teacherQueryVo.getLevel();
+        String joinDateBegin = teacherQueryVo.getJoinDateBegin();
+        String joinDateEnd = teacherQueryVo.getJoinDateEnd();
+
+        Page<Teacher> pageInfo = new Page<>(page, pageSize);
+
+        LambdaQueryWrapper<Teacher> lambdaQueryWrapper = new LambdaQueryWrapper();
+        lambdaQueryWrapper.eq(name != null, Teacher::getName, name)
+                .eq(level != null, Teacher::getLevel, level)
+                .ge(joinDateBegin != null, Teacher:: getJoinDate, joinDateBegin)
+                .le(joinDateEnd != null, Teacher::getJoinDate, joinDateEnd);
+
+        Page<Teacher> teacherPage = teacherService.page(pageInfo, lambdaQueryWrapper);
+
+        return Result.ok(teacherPage).message("分页查询讲师成功");
     }
 }
 
