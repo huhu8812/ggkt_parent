@@ -55,7 +55,7 @@ public class TeacherController {
     @PostMapping("/{page}/{pageSize}")
     public Result findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
                                @ApiParam(name = "pageSize", value = "每页大小size", required = false) @PathVariable Long pageSize,
-                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) TeacherQueryVo teacherQueryVo) {
+                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) @RequestBody(required = false) TeacherQueryVo teacherQueryVo) {
 
         Page<Teacher> pageInfo = new Page<>(page, pageSize);
 
