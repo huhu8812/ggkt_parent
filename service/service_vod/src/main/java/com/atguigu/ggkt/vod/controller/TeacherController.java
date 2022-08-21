@@ -6,6 +6,7 @@ import com.atguigu.ggkt.result.Result;
 import com.atguigu.ggkt.vo.vod.TeacherQueryVo;
 import com.atguigu.ggkt.vod.service.TeacherService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,23 +55,30 @@ public class TeacherController {
     @PostMapping("/{page}/{pageSize}")
     public Result findPage(@ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
                                @ApiParam(name = "pageSize", value = "每页大小size", required = false) @PathVariable Long pageSize,
-                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) TeacherQueryVo teacherQueryVo){
-        String name = teacherQueryVo.getName();
-        Integer level = teacherQueryVo.getLevel();
-        String joinDateBegin = teacherQueryVo.getJoinDateBegin();
-        String joinDateEnd = teacherQueryVo.getJoinDateEnd();
+                           @ApiParam(name = "teacherQueryVo", value = "teacher分页查询前端VO", required = false) TeacherQueryVo teacherQueryVo) {
 
         Page<Teacher> pageInfo = new Page<>(page, pageSize);
 
-        LambdaQueryWrapper<Teacher> lambdaQueryWrapper = new LambdaQueryWrapper();
-        lambdaQueryWrapper.eq(name != null, Teacher::getName, name)
-                .eq(level != null, Teacher::getLevel, level)
-                .ge(joinDateBegin != null, Teacher:: getJoinDate, joinDateBegin)
-                .le(joinDateEnd != null, Teacher::getJoinDate, joinDateEnd);
+        if (teacherQueryVo == null) {
+            teacherService.page(pageInfo);
+            return Result.ok(pageInfo);
+        } else {
+            String name = teacherQueryVo.getName();
+            Integer level = teacherQueryVo.getLevel();
+            String joinDateBegin = teacherQueryVo.getJoinDateBegin();
+            String joinDateEnd = teacherQueryVo.getJoinDateEnd();
 
-        Page<Teacher> teacherPage = teacherService.page(pageInfo, lambdaQueryWrapper);
 
-        return Result.ok(teacherPage).message("分页查询讲师成功");
+            LambdaQueryWrapper<Teacher> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.like(name != null, Teacher::getName, name)
+                    .eq(level != null, Teacher::getLevel, level)
+                    .ge(joinDateBegin != null, Teacher::getJoinDate, joinDateBegin)
+                    .le(joinDateEnd != null, Teacher::getJoinDate, joinDateEnd);
+
+            IPage<Teacher> teacherPage = teacherService.page(pageInfo, lambdaQueryWrapper);
+
+            return Result.ok(teacherPage).message("分页查询讲师成功");
+        }
     }
 }
 
