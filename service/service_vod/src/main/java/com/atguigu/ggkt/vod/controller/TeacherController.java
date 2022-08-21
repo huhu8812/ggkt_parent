@@ -83,7 +83,7 @@ public class TeacherController {
 
     @ApiOperation("新增一个讲师")
     @PostMapping("/add")
-    public Result addTeacher(@RequestBody Teacher teacher){
+    public Result add(@RequestBody Teacher teacher){
         boolean isSuccess = teacherService.save(teacher);
         if (isSuccess) {
             return Result.ok(null);
@@ -99,7 +99,7 @@ public class TeacherController {
      */
     @ApiOperation("根据ID查询讲师")
     @GetMapping("/{id}")
-    public Result getTeacherById(@PathVariable Long id){
+    public Result getById(@PathVariable Long id){
         Teacher teacher = teacherService.getById(id);
         if (teacher != null){
             return Result.ok(teacher);
@@ -110,8 +110,19 @@ public class TeacherController {
 
     @ApiOperation("编辑讲师信息")
     @PostMapping("/edit")
-    public Result editTeacher(@RequestBody Teacher teacher){
+    public Result edit(@RequestBody Teacher teacher){
         boolean isSuccess = teacherService.updateById(teacher);
+        if (isSuccess){
+            return Result.ok(null);
+        } else {
+            return Result.fail(null);
+        }
+    }
+
+    @ApiOperation("根据ID列表批量删除讲师")
+    @DeleteMapping("/batchremove")
+    public Result removeBatch(@RequestBody List<Long> idList){
+        boolean isSuccess = teacherService.removeByIds(idList);
         if (isSuccess){
             return Result.ok(null);
         } else {
