@@ -37,24 +37,26 @@ public class Result<T> {
 //        return result;
 //    }
 
-    public static<T> Result<T> build(T data, Integer code, String message){
+    // 成功的方法，有data数据
+    public static<T> Result<T> ok(T data){
         Result<T> result = new Result<>();
-        if (data!=null){
+        if (data != null) {
             result.setData(data);
         }
-        result.setCode(code);
-        result.setMessage(message);
+        result.setCode(200);
+        result.setMessage("成功");
         return result;
     }
 
     // 成功的方法，有data数据
-    public static<T> Result<T> ok(T data){
-        return Result.build(data, 20000, "成功");
-    }
-
-    // 成功的方法，没有data数据
     public static<T> Result<T> fail(T data){
-        return Result.build(data, 20001, "失败");
+        Result<T> result = new Result<>();
+        if (data != null) {
+            result.setData(data);
+        }
+        result.setCode(201);
+        result.setMessage("失败");
+        return result;
     }
 
     // 设置message的值，就不会至于在上面的方法中写死了
