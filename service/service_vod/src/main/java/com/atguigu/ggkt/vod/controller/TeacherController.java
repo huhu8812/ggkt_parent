@@ -28,6 +28,7 @@ import java.util.List;
 @Api(tags = "讲师管理接口")
 @RestController
 @RequestMapping("/vod/teacher")
+@CrossOrigin
 public class TeacherController {
 
     @Autowired
@@ -87,7 +88,7 @@ public class TeacherController {
     public Result add(@RequestBody Teacher teacher){
         boolean isSuccess = teacherService.save(teacher);
         if (isSuccess) {
-            return Result.ok(null);
+            return Result.ok(null).message("新增讲师成功！");
         } else {
             return Result.fail(null);
         }
@@ -130,7 +131,7 @@ public class TeacherController {
 //        }
         boolean isSuccess = teacherService.removeByIds(idList);
         if (isSuccess){
-            return Result.ok(null);
+            return Result.ok(null).message("修改讲师信息成功");
         } else {
             return Result.fail(null);
         }
