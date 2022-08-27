@@ -54,7 +54,7 @@ public class Subject {
 	private Integer sort;
 
 	@ApiModelProperty(value = "是否包含子节点")
-	@TableField(exist = false)
+	@TableField(exist = false) // exist = false 表里没有这个字段，但是这个熟悉要用到
 	private boolean hasChildren;
 
 }
