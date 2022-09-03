@@ -3,6 +3,7 @@ package com.atguigu.ggkt.vod.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.atguigu.ggkt.model.vod.Subject;
 import com.atguigu.ggkt.vo.vod.SubjectEeVo;
+import com.atguigu.ggkt.vod.listenr.SubjectListener;
 import com.atguigu.ggkt.vod.mapper.SubjectMapper;
 import com.atguigu.ggkt.vod.service.SubjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> implements SubjectService {
 
+    @Autowired
+    private SubjectListener subjectListener;
 
     @Override
     public List<Subject> selectSubjectList(Long id) {
@@ -66,6 +70,16 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
             EasyExcel.write(response.getOutputStream(), SubjectEeVo.class)
                     .sheet("课程分类")
                     .doWrite(subjectEeVoList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void importData(MultipartFile file) {
+        try {
+            EasyExcel.read(file.getInputStream(), SubjectEeVo.class, subjectListener)
+                    .sheet().doRead();
         } catch (IOException e) {
             e.printStackTrace();
         }

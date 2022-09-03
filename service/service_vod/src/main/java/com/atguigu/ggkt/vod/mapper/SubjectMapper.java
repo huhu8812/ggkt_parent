@@ -2,6 +2,7 @@ package com.atguigu.ggkt.vod.mapper;
 
 import com.atguigu.ggkt.model.vod.Subject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author huhu
  * @since 2022-08-26
  */
+@Mapper
 public interface SubjectMapper extends BaseMapper<Subject> {
 
 }
